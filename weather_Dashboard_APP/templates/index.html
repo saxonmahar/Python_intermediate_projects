@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+            border: none;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #38bdf8;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌤 Weather Dashboard</h1>
+
+        <!-- POST FORM -->
+        <form method="POST">
+            <input type="text" name="city" placeholder="Enter city name" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- RESULT SECTION -->
+        {% if weather %}
+        <div class="result">
+            <h2>{{ weather.city }}</h2>
+            <p>🌡 Temperature: {{ weather.temperature }} °C</p>
+            <p>☁ Condition: {{ weather.description }}</p>
+            <p>💧 Humidity: {{ weather.humidity }}%</p>
+            <p>🌬 Wind Speed: {{ weather.wind_speed }} m/s</p>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>
