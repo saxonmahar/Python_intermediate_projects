@@ -8,17 +8,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #0f172a;
+            background: #0f172a; /* Slate 900 */
             color: #fff;
             text-align: center;
-            padding: 50px;
+            padding: 50px 20px;
+            margin: 0;
         }
 
         .container {
             background: #1e293b;
             padding: 30px;
             border-radius: 12px;
-            width: 400px;
+            max-width: 800px;
             margin: auto;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
@@ -45,12 +46,39 @@
             background: #0ea5e9;
         }
 
-        .result {
-            margin-top: 20px;
+        .alert {
+            background: #ef4444;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
         }
 
-        h1 {
-            margin-bottom: 20px;
+        .result {
+            margin-top: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .forecast-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .forecast-card {
+            background: #334155;
+            padding: 15px;
+            border-radius: 10px;
+            width: 120px;
+            transition: transform 0.2s;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-5px);
+            background: #475569;
         }
     </style>
 </head>
@@ -58,6 +86,15 @@
 
     <div class="container">
         <h1>🌤 Weather Dashboard</h1>
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
         <!-- POST FORM -->
         <form method="POST">
@@ -68,16 +105,30 @@
         <!-- RESULT SECTION -->
         {% if weather %}
         <div class="result">
-            <h2>{{ weather.city }}</h2>
-            <p>🌡 Temperature: {{ weather.temperature }} °C</p>
-            <p>☁ Condition: {{ weather.description }}</p>
-            <p>💧 Humidity: {{ weather.humidity }}%</p>
-            <p>🌬 Wind Speed: {{ weather.wind_speed }} m/s</p>
+            <h2>Weather in {{ weather.city }}</h2>
+            <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather Icon">
+            <h3 style="font-size: 2.5rem; margin: 0;">{{ weather.temperature }}°C</h3>
+            <p style="text-transform: capitalize; color: #94a3b8;">{{ weather.description }}</p>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <span>💧 Humidity: {{ weather.humidity }}%</span>
+                <span>🌬 Wind: {{ weather.wind_speed }} m/s</span>
+            </div>
         </div>
         {% endif %}
 
-        {% if error %}
-        <p style="color:red;">{{ error }}</p>
+        <!-- FORECAST SECTION -->
+        {% if forecast %}
+        <h3 style="margin-top: 30px;">5-Day Forecast</h3>
+        <div class="forecast-container">
+            {% for day in forecast %}
+            <div class="forecast-card">
+                <small>{{ day.date }}</small><br>
+                <img src="https://openweathermap.org/img/wn/{{ day.icon }}.png" alt="icon">
+                <div style="font-weight: bold;">{{ day.temp }}°C</div>
+                <small style="font-size: 0.8rem; color: #cbd5e1;">{{ day.description }}</small>
+            </div>
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
 
